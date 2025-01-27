@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use autodie qw(:all);
-use Sendmail::Milter;
+use Sendmail::PMilter qw(:all);
 
 # Define the phrases to block
 my @block_phrases = (
@@ -15,7 +15,8 @@ my @block_phrases = (
 );
 
 # Create a new milter
-my $milter = Sendmail::Milter->new();
+my $milter = Sendmail::PMilter->new();
+$milter->auto_setconn('blocking-milter');
 
 # Define the callback for filtering messages
 $milter->register('blocking-milter',
@@ -48,5 +49,7 @@ $milter->register('blocking-milter',
 );
 
 # Run the milter
-Sendmail::Milter::main('blocking-milter', '/var/run/blocking-milter.sock')
-	or die "Failed to start milter: $!";
+# Sendmail::Milter::main('blocking-milter', '/var/run/blocking-milter.sock')
+#	or die "Failed to start milter: $!";
+
+$milter->main();
