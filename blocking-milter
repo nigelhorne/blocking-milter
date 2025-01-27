@@ -12,6 +12,7 @@ my @block_phrases = (
 	'optimize your website',
 	'increase your traffic',
 	'boost your rankings',
+	'Free Website Audit',
 );
 
 # Create a new milter
@@ -31,7 +32,7 @@ $milter->register('blocking-milter',
 			# Check headers for spam phrases
 			foreach my $phrase (@block_phrases) {
 				if ($value =~ /\b\Q$phrase\E\b/i) {
-					$ctx->setreply(550, '5.7.1', 'Message rejected: spam detected.');
+					$ctx->setreply(550, '5.7.1', 'Message rejected: spam detected');
 					return SMFIS_REJECT; # Reject the message
 				}
 			}
