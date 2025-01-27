@@ -5,6 +5,7 @@ In `/etc/mail/sendmail.mc`:
     INPUT_MAIL_FILTER(`blocking-milter', `S=local:/run/blocking-milter.sock, T=S:30s;R:3m')dnl
 
 In `/etc/rc.local`:
+
 	rm -f /run/blocking-milter
 	/usr/local/etc/blocking-milter local:/run/blocking-milter&
 
