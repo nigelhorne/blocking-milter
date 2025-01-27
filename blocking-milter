@@ -1,0 +1,52 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use autodie qw(:all);
+use Sendmail::Milter;
+
+# Define the phrases to block
+my @block_phrases = (
+	'SEO audit',
+	'optimize your website',
+	'increase your traffic',
+	'boost your rankings',
+);
+
+# Create a new milter
+my $milter = Sendmail::Milter->new();
+
+# Define the callback for filtering messages
+$milter->register('blocking-milter',
+	{
+		envfrom => sub {
+			my ($ctx, $from) = @_;
+			return SMFIS_CONTINUE; # Continue processing
+		},
+		header => sub {
+			my ($ctx, $header, $value) = @_;
+
+			# Check headers for spam phrases
+			foreach my $phrase (@block_phrases) {
+				if ($value =~ /\b\Q$phrase\E\b/i) {
+					$ctx->setreply(550, '5.7.1', 'Message rejected: spam detected.');
+					return SMFIS_REJECT; # Reject the message
+				}
+			}
+			return SMFIS_CONTINUE; # Continue processing
+		},
+		eom => sub {
+			my $ctx = shift;
+			return SMFIS_CONTINUE; # Continue after end of message
+		},
+		abort => sub {
+			my $ctx = shift;
+			return SMFIS_CONTINUE; # Handle aborts gracefully
+		},
+	}
+);
+
+# Run the milter
+Sendmail::Milter::main('blocking-milter', '/var/run/blocking-milter.sock')
+	or die "Failed to start milter: $!";
