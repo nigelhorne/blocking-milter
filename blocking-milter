@@ -5,6 +5,7 @@ use warnings;
 
 use autodie qw(:all);
 use Sendmail::PMilter qw(:all);
+use Sys::Syslog qw(:standard :macros);
 
 # Define the phrases to block
 my @block_phrases = (
@@ -32,7 +33,8 @@ $milter->register('blocking-milter',
 			# Check headers for spam phrases
 			foreach my $phrase (@block_phrases) {
 				if ($value =~ /\b\Q$phrase\E\b/i) {
-					$ctx->setreply(550, '5.7.1', 'Message rejected: spam detected');
+					$ctx->setreply(554, '5.7.1', 'Rejecting your spam');
+					syslog(LOG_WARNING, 'Message rejected: spam detected');
 					return SMFIS_REJECT; # Reject the message
 				}
 			}
