@@ -6,6 +6,7 @@ use warnings;
 use autodie qw(:all);
 use Sendmail::PMilter qw(:all);
 use Sys::Syslog qw(:standard :macros);
+use Data::Validate::IP;
 
 # Define the phrases to block
 my @block_phrases = (
@@ -29,7 +30,28 @@ $milter->auto_setconn($name);
 # Define the callback for filtering messages
 $milter->register($name,
 	{
-		envfrom => sub {
+		connect => sub {
+			my ($ctx, $hostname) = @_;
+
+			my $ip;
+
+			if($hostname =~ /\[(.+)]/) {
+				$ip = $1;
+				if($ip =~ /^127\.0\./) {
+					return SMFIS_ACCEPT;
+				}
+				if($ip =~ /^192\.168\./) {
+					return SMFIS_ACCEPT;
+				}
+				if(is_private_ipv4($ip) || is_loopback_ipv4($ip)) {
+					return SMFIS_ACCEPT;
+				}
+			} elsif($hostname eq 'localhost') {
+				return SMFIS_ACCEPT;
+			}
+
+			return SMFIS_CONTINUE;
+		}, envfrom => sub {
 			my ($ctx, $from) = @_;
 			return SMFIS_CONTINUE; # Continue processing
 		}, header => sub {
