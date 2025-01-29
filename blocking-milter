@@ -17,12 +17,15 @@ my @block_phrases = (
 	'audit report of your website',
 );
 
+my $name = 'blocking-milter';
+
+openlog $name, 'cons,pid', LOG_MAIL;
 # Create a new milter
 my $milter = Sendmail::PMilter->new();
-$milter->auto_setconn('blocking-milter');
+$milter->auto_setconn($name);
 
 # Define the callback for filtering messages
-$milter->register('blocking-milter',
+$milter->register($name,
 	{
 		envfrom => sub {
 			my ($ctx, $from) = @_;
