@@ -15,11 +15,13 @@ my @block_phrases = (
 	'boost your rankings',
 	'Free Website Audit',
 	'audit report of your website',
+	'Craigslist Adult Club',
 );
 
 my $name = 'blocking-milter';
 
 openlog $name, 'cons,pid', LOG_MAIL;
+
 # Create a new milter
 my $milter = Sendmail::PMilter->new();
 $milter->auto_setconn($name);
