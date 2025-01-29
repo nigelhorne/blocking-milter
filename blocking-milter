@@ -14,6 +14,7 @@ my @block_phrases = (
 	'increase your traffic',
 	'boost your rankings',
 	'Free Website Audit',
+	'audit report of your website',
 );
 
 # Create a new milter
@@ -26,8 +27,7 @@ $milter->register('blocking-milter',
 		envfrom => sub {
 			my ($ctx, $from) = @_;
 			return SMFIS_CONTINUE; # Continue processing
-		},
-		header => sub {
+		}, header => sub {
 			my ($ctx, $header, $value) = @_;
 
 			# Check headers for spam phrases
@@ -39,12 +39,22 @@ $milter->register('blocking-milter',
 				}
 			}
 			return SMFIS_CONTINUE; # Continue processing
-		},
-		eom => sub {
+		}, body => sub {
+			my ($ctx, $body) = @_;
+
+			# Check body for spam phrases (doesn't work if the phrase spans two blocks)
+			foreach my $phrase (@block_phrases) {
+				if($body =~ /\b\Q$phrase\E\b/i) {
+					$ctx->setreply(554, '5.7.1', 'Rejecting your spam');
+					syslog(LOG_WARNING, 'Message rejected: spam detected');
+					return SMFIS_REJECT; # Reject the message
+				}
+			}
+			return SMFIS_CONTINUE; # Continue processing
+		}, eom => sub {
 			my $ctx = shift;
-			return SMFIS_CONTINUE; # Continue after end of message
-		},
-		abort => sub {
+			return SMFIS_ACCEPT;	# If we've got this far, all is good
+		}, abort => sub {
 			my $ctx = shift;
 			return SMFIS_CONTINUE; # Handle aborts gracefully
 		},
