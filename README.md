@@ -12,7 +12,7 @@ In `/etc/rc.local`:
 Or put this is in `/etc/systemd/system/blocking-milter.service`:
 
     [Unit]
-    Description=Block resent spams
+    Description=Block SEO, and similar, spams
     After=network.target
  
     [Service]
