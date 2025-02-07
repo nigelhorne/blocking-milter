@@ -31,11 +31,11 @@ jobs:
           sudo apt install sendmail libsendmail-pmilter-perl
           cpanm -iqn Sendmail::PMilter Sys::Syslog Data::Validate::IP B::Lint warnings::unused IPC::System::Simple
 
-      - name: Run script
-        run: |
-          perl ./blocking-milter local:/run/blocking-milter
-
       - name: Lint Perl script
         run: |
           perl -MO=Lint ./blocking-milter
           perl -c -Mwarnings::unused ./blocking-milter
+
+      - name: Run script
+        run: |
+          perl ./blocking-milter local:/run/blocking-milter
