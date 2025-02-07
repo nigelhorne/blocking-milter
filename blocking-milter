@@ -16,6 +16,10 @@ my @block_phrases = (
 	'boost your rankings',
 	'Free Website Audit',
 	'audit report of your website',
+	'Without better SEO',
+);
+
+my @block_subjects = (
 	'Craigslist Adult Club',
 );
 
@@ -58,7 +62,7 @@ $milter->register($name,
 			my ($ctx, $header, $value) = @_;
 
 			# Check headers for spam phrases
-			foreach my $phrase (@block_phrases) {
+			foreach my $phrase (@block_phrases, @block_subjects) {
 				if ($value =~ /\b\Q$phrase\E\b/i) {
 					$ctx->setreply(554, '5.7.1', 'Rejecting your spam');
 					syslog(LOG_WARNING, 'Message rejected: spam detected');
