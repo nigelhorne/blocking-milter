@@ -1,0 +1,38 @@
+---
+name: Test blocking-milter
+
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+  schedule:
+    - cron: '0 1 * * *'  # Runs daily at 1 AM UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: 'latest'
+
+      - name: Install dependencies
+        run: |
+          cpanm -iqn Sendmail::PMilter Sys::Syslog Data::Validate::IP B::Lint warnings::unused IPC::System::Simple
+
+      - name: Run script
+        run: |
+          perl ./blocking-milter local:/run/blocking-milter
+
+      - name: Lint Perl script
+        run: |
+          perl -MO=Lint ./blocking-milter
+          perl -c -Mwarnings::unused ./blocking-milter
