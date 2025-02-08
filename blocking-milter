@@ -18,6 +18,7 @@ my @block_phrases = (
 	'audit report of your website',
 	'Without better SEO',
 	'right SEO strategy',
+	'SEO optimizations',
 );
 
 my @block_subjects = (
