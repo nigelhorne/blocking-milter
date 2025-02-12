@@ -19,6 +19,7 @@ my @block_phrases = (
 	'Without better SEO',
 	'right SEO strategy',
 	'SEO optimizations',
+	'high-quality electric bikes',
 );
 
 my @block_subjects = (
