@@ -20,6 +20,7 @@ my @block_phrases = (
 	'right SEO strategy',
 	'SEO optimizations',
 	'high-quality electric bikes',
+	'We are a web design company',
 );
 
 my @block_subjects = (
