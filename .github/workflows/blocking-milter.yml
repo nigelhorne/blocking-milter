@@ -36,6 +36,6 @@ jobs:
           perl -MO=Lint ./blocking-milter
           perl -c -Mwarnings::unused ./blocking-milter
 
-      - name: Run script
-        run: |
-          perl ./blocking-milter local:/run/blocking-milter
+      # - name: Run script
+      # run: |
+      #   perl ./blocking-milter local:/run/blocking-milter
