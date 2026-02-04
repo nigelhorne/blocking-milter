@@ -28,6 +28,7 @@ my @block_phrases = (
 my @block_subjects = (
 	'Action Required Password About to Expire',
 	'Craigslist Adult Club',
+	'Playful nympho backdoor open',
 );
 
 my $name = 'blocking-milter';
