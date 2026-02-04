@@ -73,7 +73,7 @@ $milter->register($name,
 				if ($value =~ /\b\Q$phrase\E\b/i) {
 					$ctx->setreply(554, '5.7.1', 'Rejecting your spam');
 					syslog(LOG_WARNING, 'Message rejected: spam detected');
-					return SMFIS_REJECT; # Reject the message
+					return SMFIS_REJECT;	# Reject the message
 				}
 			}
 			return SMFIS_CONTINUE; # Continue processing
@@ -85,7 +85,7 @@ $milter->register($name,
 				if($body =~ /\b\Q$phrase\E\b/i) {
 					$ctx->setreply(554, '5.7.1', 'Rejecting your spam');
 					syslog(LOG_WARNING, 'Message rejected: spam detected');
-					return SMFIS_REJECT; # Reject the message
+					return SMFIS_REJECT;	# Reject the message
 				}
 			}
 			return SMFIS_CONTINUE; # Continue processing
