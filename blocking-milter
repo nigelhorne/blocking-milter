@@ -23,6 +23,7 @@ my @block_phrases = (
 	'We are a web design company',
 	'Hi njh,',
 	'SEO-optimized',
+	'City Dating Club',
 );
 
 my @block_subjects = (
@@ -77,6 +78,7 @@ $milter->register($name,
 					return SMFIS_REJECT;	# Reject the message
 				}
 			}
+
 			return SMFIS_CONTINUE; # Continue processing
 		}, body => sub {
 			my ($ctx, $body) = @_;
