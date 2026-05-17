@@ -70,7 +70,7 @@ $milter->register($name,
 
 			return SMFIS_CONTINUE;
 		}, envfrom => sub {
-			my ($ctx, $from) = @_;
+			# my ($ctx, $from) = @_;
 			return SMFIS_CONTINUE; # Continue processing
 		}, header => sub {
 			my ($ctx, $header, $value) = @_;
@@ -98,10 +98,10 @@ $milter->register($name,
 			}
 			return SMFIS_CONTINUE; # Continue processing
 		}, eom => sub {
-			my $ctx = shift;
+			# my $ctx = shift;
 			return SMFIS_ACCEPT;	# If we've got this far, all is good
 		}, abort => sub {
-			my $ctx = shift;
+			# my $ctx = shift;
 			return SMFIS_CONTINUE; # Handle aborts gracefully
 		},
 	}
