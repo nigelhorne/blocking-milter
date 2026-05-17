@@ -32,11 +32,6 @@ my @block_subjects = (
 	'Playful nympho backdoor open',
 );
 
-# Dodgy groups used for spamming
-my @block_groups = (
-	'ar6mtd@groups.outlook.com',
-);
-
 my $name = 'blocking-milter';
 
 openlog $name, 'cons,pid', LOG_MAIL;
@@ -76,12 +71,18 @@ $milter->register($name,
 			my ($ctx, $header, $value) = @_;
 
 			# Check headers for spam phrases
-			foreach my $phrase (@block_phrases, @block_subjects, @block_groups) {
+			foreach my $phrase (@block_phrases, @block_subjects) {
 				if ($value =~ /\b\Q$phrase\E\b/i) {
 					$ctx->setreply(554, '5.7.1', 'Rejecting your spam');
 					syslog(LOG_WARNING, 'Message rejected: spam detected');
 					return SMFIS_REJECT;	# Reject the message
 				}
+			}
+
+			if(($header eq 'To') && ($value =~ /[A-Za-z0-9]{6}\@groups.outlook.com/)) {
+				$ctx->setreply(554, '5.7.1', 'Rejecting your spam');
+				syslog(LOG_WARNING, 'Message rejected: spam detected');
+				return SMFIS_REJECT;	# Reject the message
 			}
 
 			return SMFIS_CONTINUE; # Continue processing
